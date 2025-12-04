@@ -1,0 +1,20 @@
+.galaxy-container {
+  position: fixed;
+  inset: 0;               /* top:0; right:0; bottom:0; left:0 */
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;            /* behind app content */
+  pointer-events: none;   /* allow clicks through */
+  overflow: hidden;
+  display: block;
+}
+
+/* ogl appends a <canvas> into the container — force it to cover */
+.galaxy-container > canvas {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  box-sizing: border-box;
+}
