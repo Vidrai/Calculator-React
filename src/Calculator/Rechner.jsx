@@ -1,14 +1,23 @@
 import { useState } from 'react'
 import './Rechner.css'
 
+import CountUp from '../Components/CountUp.jsx'
+
+import resultGif from '../Assets/giphy.gif'
+
 function Rechner() {
     const [display, setDisplay] = useState('0')
     const [input, setInput] = useState('0')
     const [previousValue, setPreviousValue] = useState(null)
     const [operation, setOperation] = useState(null)
     const [shouldResetDisplay, setShouldResetDisplay] = useState(false)
+    const [showAnimation, setShowAnimation] = useState(false)
+    const [animatedValue, setAnimatedValue] = useState(0)
+    const [showGif, setShowGif] = useState(false)
 
     const handleNumberClick = (num) => {
+        setShowAnimation(false)
+        setShowGif(false)
         if (shouldResetDisplay) {
             setInput(String(num))
             setDisplay(String(num))
@@ -21,6 +30,8 @@ function Rechner() {
     }
 
     const handleOperation = (op) => {
+        setShowAnimation(false)
+        setShowGif(false)
         if (operation && !shouldResetDisplay) {
             handleEquals()
         }
@@ -53,6 +64,8 @@ function Rechner() {
 
             setDisplay(String(result))
             setInput(String(result))
+            setAnimatedValue(result)
+            setShowAnimation(true)
             setPreviousValue(null)
             setOperation(null)
             setShouldResetDisplay(true)
@@ -60,14 +73,18 @@ function Rechner() {
     }
 
     const handleDecimal = () => {
+        setShowAnimation(false)
+        setShowGif(false)
         if (!input.includes('.')) {
             const newInput = input + '.'
             setInput(newInput)
             setDisplay(newInput)
         }
     }
-
+    
     const handleToggleSign = () => {
+        setShowAnimation(false)
+        setShowGif(false)
         const newValue = String(Number(input) * -1)
         setInput(newValue)
         setDisplay(newValue)
@@ -79,6 +96,13 @@ function Rechner() {
         setPreviousValue(null)
         setOperation(null)
         setShouldResetDisplay(false)
+        setShowAnimation(false)
+        setShowGif(true)
+
+        // Hide gif after 1 second
+        setTimeout(() => {
+            setShowGif(false)
+        }, 1000)
     }
 
     return (
@@ -105,8 +129,23 @@ function Rechner() {
                 <button id="Addition" onClick={() => handleOperation('+')}>+</button>
             </div>
             
-            <h1 id="Display">{display}</h1>
+            <div id="Display">
+                {showAnimation ? (
+                    <CountUp
+                        from={0}
+                        to={parseInt(animatedValue) || 0}
+                        duration={0.5}
+                        className="display-animation"
+                    />
+                ) : (
+                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <h1>{display}</h1>
+                        {showGif && <img src={resultGif} alt="result gif" className="result-gif" style={{ position: 'absolute' }} />}
+                    </div>
+                )}
+            </div>
             <button id="CALCULATE" onClick={handleEquals}>CALC IT!</button>
+            <button id="Clear" onClick={handleClear}>DESTROY</button>
         </div>
     )
 }

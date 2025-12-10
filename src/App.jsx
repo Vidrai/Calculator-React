@@ -4,23 +4,16 @@ import Rechner from './Calculator/Rechner.jsx'
 
 import Galaxy from './Background/Galaxy.jsx'
 
-
-
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-     
- 
-       <Galaxy />
-
-    
+      <Galaxy />
       
       <div>
-      <Rechner />
-      </div> 
-     
+        <Rechner />
+      </div>
     </>
   )
 }
