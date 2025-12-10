@@ -6,7 +6,7 @@ export default function CountUp({
   from = 0,
   direction = 'up',
   delay = 0,
-  duration = 2,
+  duration = 0.5,
   className = '',
   startWhen = true,
   separator = '',

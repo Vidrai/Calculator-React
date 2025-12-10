@@ -4,6 +4,7 @@ import './Rechner.css'
 import CountUp from '../Components/CountUp.jsx'
 
 import resultGif from '../Assets/giphy.gif'
+import tuffGif from '../Assets/67GIF.gif'
 
 function Rechner() {
     const [display, setDisplay] = useState('0')
@@ -14,6 +15,7 @@ function Rechner() {
     const [showAnimation, setShowAnimation] = useState(false)
     const [animatedValue, setAnimatedValue] = useState(0)
     const [showGif, setShowGif] = useState(false)
+    const [showTuffGif, setShowTuffGif] = useState(false)
 
     const handleNumberClick = (num) => {
         setShowAnimation(false)
@@ -65,7 +67,16 @@ function Rechner() {
             setDisplay(String(result))
             setInput(String(result))
             setAnimatedValue(result)
-            setShowAnimation(true)
+            
+            if (Math.round(result) === 67) {
+                setShowTuffGif(true)
+                setTimeout(() => {
+                    setShowTuffGif(false)
+                }, 3000)
+            } else {
+                setShowAnimation(true)
+            }
+
             setPreviousValue(null)
             setOperation(null)
             setShouldResetDisplay(true)
@@ -99,54 +110,70 @@ function Rechner() {
         setShowAnimation(false)
         setShowGif(true)
 
-        // Hide gif after 1 second
         setTimeout(() => {
             setShowGif(false)
         }, 1000)
     }
 
     return (
-        <div id="Calculator">
-            <div className="button-grid">
-                <button id="Number7" onClick={() => handleNumberClick(7)}>7</button>
-                <button id="Number8" onClick={() => handleNumberClick(8)}>8</button>
-                <button id="Number9" onClick={() => handleNumberClick(9)}>9</button>
-                <button id="Divide" onClick={() => handleOperation('/')}>÷</button>
+        <>
+            {showTuffGif && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    height: '100%',
+                    backgroundImage: `url(${tuffGif})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    zIndex: 0,
+                    pointerEvents: 'none'
+                }} />
+            )}
 
-                <button id="Number4" onClick={() => handleNumberClick(4)}>4</button>
-                <button id="Number5" onClick={() => handleNumberClick(5)}>5</button>
-                <button id="Number6" onClick={() => handleNumberClick(6)}>6</button>
-                <button id="Multiply" onClick={() => handleOperation('*')}>×</button>
+            <div id="Calculator">
+                <div className="button-grid">
+                    <button id="Number7" onClick={() => handleNumberClick(7)}>7</button>
+                    <button id="Number8" onClick={() => handleNumberClick(8)}>8</button>
+                    <button id="Number9" onClick={() => handleNumberClick(9)}>9</button>
+                    <button id="Divide" onClick={() => handleOperation('/')}>÷</button>
 
-                <button id="Number1" onClick={() => handleNumberClick(1)}>1</button>
-                <button id="Number2" onClick={() => handleNumberClick(2)}>2</button>
-                <button id="Number3" onClick={() => handleNumberClick(3)}>3</button>
-                <button id="Subtract" onClick={() => handleOperation('-')}>-</button>
+                    <button id="Number4" onClick={() => handleNumberClick(4)}>4</button>
+                    <button id="Number5" onClick={() => handleNumberClick(5)}>5</button>
+                    <button id="Number6" onClick={() => handleNumberClick(6)}>6</button>
+                    <button id="Multiply" onClick={() => handleOperation('*')}>×</button>
 
-                <button id="Number0" onClick={handleToggleSign}>-/+</button>
-                <button id="Decimals" onClick={() => handleNumberClick(0)}>0</button>
-                <button id="Equal" onClick={handleDecimal}>.</button>
-                <button id="Addition" onClick={() => handleOperation('+')}>+</button>
+                    <button id="Number1" onClick={() => handleNumberClick(1)}>1</button>
+                    <button id="Number2" onClick={() => handleNumberClick(2)}>2</button>
+                    <button id="Number3" onClick={() => handleNumberClick(3)}>3</button>
+                    <button id="Subtract" onClick={() => handleOperation('-')}>-</button>
+
+                    <button id="Number0" onClick={handleToggleSign}>-/+</button>
+                    <button id="Decimals" onClick={() => handleNumberClick(0)}>0</button>
+                    <button id="Equal" onClick={handleDecimal}>.</button>
+                    <button id="Addition" onClick={() => handleOperation('+')}>+</button>
+                </div>
+                
+                <div id="Display">
+                    {showAnimation ? (
+                        <CountUp
+                            from={0}
+                            to={parseInt(animatedValue) || 0}
+                            duration={0.5}
+                            className="display-animation"
+                        />
+                    ) : (
+                        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <h1>{display}</h1>
+                            {showGif && <img src={resultGif} alt="result gif" className="result-gif" style={{ position: 'absolute' }} />}
+                        </div>
+                    )}
+                </div>
+                <button id="CALCULATE" onClick={handleEquals}>CALC IT!</button>
+                <button id="Clear" onClick={handleClear}>DESTROY</button>
             </div>
-            
-            <div id="Display">
-                {showAnimation ? (
-                    <CountUp
-                        from={0}
-                        to={parseInt(animatedValue) || 0}
-                        duration={0.5}
-                        className="display-animation"
-                    />
-                ) : (
-                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <h1>{display}</h1>
-                        {showGif && <img src={resultGif} alt="result gif" className="result-gif" style={{ position: 'absolute' }} />}
-                    </div>
-                )}
-            </div>
-            <button id="CALCULATE" onClick={handleEquals}>CALC IT!</button>
-            <button id="Clear" onClick={handleClear}>DESTROY</button>
-        </div>
+        </>
     )
 }
 
